@@ -1,0 +1,7 @@
+{
+    "author": "Erik Anderson",
+    "block": "block",
+    "_copy_without_render": [
+        "toolbox/scripts/sim_shm.tcl"
+    ]
+}

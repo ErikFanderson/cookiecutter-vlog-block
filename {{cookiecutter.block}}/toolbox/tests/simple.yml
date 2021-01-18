@@ -1,0 +1,20 @@
+#-------------------------------------------------------------------------------
+# Xcelium config
+#-------------------------------------------------------------------------------
+xcelium.options: 
+- "-64bit"
+- "-uvm"
+- "-sv"
+- "-define NCVLOG"
+- "-access"
+- "+rwc"
+- "-seed 5"
+- "+UVM_TESTNAME=simple_test"
+- "+UVM_NO_RELNOTES"
+- "-coverage A"
+- "-covdut tx_thermal_tuner"
+- "-define CSVDATA"
+  #- "-disable_sem2009"
+  #- "-parseinfo ifxdef"
+  #- "-gui"
+#-------------------------------------------------------------------------------

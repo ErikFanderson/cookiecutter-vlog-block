@@ -1,0 +1,84 @@
+#-------------------------------------------------------------------------------
+# Dir setup 
+#-------------------------------------------------------------------------------
+dirs.base_dir: "${internal.env.AYAR_HDL_HOME}/src/thermal_tuning"
+dirs.block_dir: "${dirs.base_dir}/toolbox/tx_thermal_tuner"
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Common simulation setup
+#-------------------------------------------------------------------------------
+xcelium.top_tcl_template: "${dirs.block_dir}/scripts/sim_shm.tcl"
+xcelium.testbench: "top"
+
+xcelium.defines:
+- "${dirs.base_dir}/rtl/tx_thermal_tuner_defs.v"
+xcelium.packages:
+- "${dirs.base_dir}/test/tx_thermal_tuner/tx_thermal_tuner_pkg.sv"
+xcelium.rtl:
+- "${internal.env.AYAR_HDL_HOME}/src/misc/rtl/averager.v"
+- "${internal.env.AYAR_HDL_HOME}/src/misc/rtl/reset_sync.v"
+- "${internal.env.AYAR_HDL_HOME}/src/misc/rtl/pdm.v"
+- "${internal.env.AYAR_HDL_HOME}/src/misc/rtl/flex_clk_div.v"
+- "${internal.env.AYAR_HDL_HOME}/src/misc/rtl/handshake_if.v"
+- "${internal.env.AYAR_HDL_HOME}/src/thermal_tuning/rtl/select.v"
+- "${internal.env.AYAR_HDL_HOME}/src/thermal_tuning/rtl/tx_thermal_tuner_core.v"
+- "${internal.env.AYAR_HDL_HOME}/src/thermal_tuning/rtl/tx_thermal_tuner.v"
+xcelium.test:
+- "${dirs.base_dir}/test/tx_thermal_tuner/top_w_ring.sv"
+- "${dirs.base_dir}/test/tx_thermal_tuner/tx_thermal_tuner_bfm.sv"
+- "${internal.env.AYAR_HDL_HOME}/src/analog/models/sigma_delta_fe.sv"
+- "${internal.env.AYAR_HDL_HOME}/src/photonic/models/ring_model.sv"
+xcelium.include_dirs:
+- "${dirs.base_dir}/test/tx_thermal_tuner/tb_classes"
+
+xcelium.bin: "xrun"
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Tools
+#-------------------------------------------------------------------------------
+tools:
+- "${internal.env.AYAR_HDL_HOME}/toolbox-buildfile-tools/make/make"
+- "${internal.env.AYAR_HDL_HOME}/toolbox/toolbox/tools/jinja_tool/jinja_tool"
+- "${internal.env.AYAR_HDL_HOME}/toolbox-cadence-tools/xcelium/xcelium"
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# IMC setup 
+#-------------------------------------------------------------------------------
+#files.imc_bin: "/vault/tools/commercial/cadence/installs/VMANAGER1909/tools.lnx86/bin/imc"
+#files.simvision_script: "simvision.svcf"
+#make.targets:
+#- name: "waves"
+#  description: "Passes db to simvision"
+#  dependencies: []
+#  outputs: []
+#  commands: 
+#  - "echo simvision -input simvision.svcf build/<target>/current/waves.shm/waves.trn"
+#- name: "plot"
+#  description: "Plots data for simple viewing"
+#  dependencies: []
+#  outputs: []
+#  commands: 
+#  - "echo ${dirs.base_dir}/toolbox/plot.py build/<target>/current/data.csv"
+#
+#- name: "cov"
+#  description: "Performs coverage analysis on tx block"
+#  dependencies: []
+#  outputs: []
+#  commands: 
+#  - "echo cp tx_thermal_tuner_core/imc.tcl build/tx/current/"
+#  - "echo cd build/tx_thermal_tuner_core/current; imc -exec imc.tcl"
+#-------------------------------------------------------------------------------
+
+#-------------------------------------------------------------------------------
+# Jobs
+#-------------------------------------------------------------------------------
+# Basic Jobs
+jobs.build.description: "Generates a Makefile w/ all jobs as targets"
+jobs.build.tasks: [{tool: Make}]
+
+jobs.simple.description: "UVM_TESTNAME = simple_test"
+jobs.simple.tasks: [{tool: "Xcelium", additional_configs: ["tests/simple.yml"]}]
+#-------------------------------------------------------------------------------
